@@ -58,6 +58,7 @@ public class Register extends javax.swing.JFrame {
         } catch (RemoteException | NotBoundException | MalformedURLException e) {
             System.out.println(e);
         }
+        setLocation(400,200);
 
     }
 

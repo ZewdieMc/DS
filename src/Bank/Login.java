@@ -7,7 +7,7 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  *
- * @author mc
+ * @author Zewdie Habtie
  */
 public class Login extends javax.swing.JFrame {
 
@@ -21,6 +21,7 @@ public class Login extends javax.swing.JFrame {
 
         BankInterface Bank = (BankInterface) Naming.lookup("rmi://" + HOST_NAME + ":" + Integer.toString(PORT) + "/" + REMOTE_OBJECT);
         this.bank = Bank;
+        setLocation(400, 200);
     }
 
     public String hashPassword(String password) throws NoSuchAlgorithmException {
@@ -217,6 +218,7 @@ public class Login extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() -> {
             try {
                 new Login().setVisible(true);
+                
             } catch (Exception ex) {
                 System.out.println(ex);
             }

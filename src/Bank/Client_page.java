@@ -1,7 +1,10 @@
 package Bank;
 
+import java.math.BigInteger;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class Client_page extends javax.swing.JFrame {
 
@@ -10,10 +13,22 @@ public class Client_page extends javax.swing.JFrame {
     private static final String REMOTE_OBJECT = "Bank";
     private BankInterface bank;
 
-    public Client_page() throws Exception{
+    public String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.reset();
+        md.update(password.getBytes());
+        byte[] digest = md.digest();
+        BigInteger bigInt = new BigInteger(1, digest);
+        String hastext = bigInt.toString(16);
+        System.out.println("hash of " + password + " = " + hastext);
+        return hastext;
+    }
+
+    public Client_page() throws Exception {
         initComponents();
         BankInterface Bank = (BankInterface) Naming.lookup("rmi://" + HOST_NAME + ":" + Integer.toString(PORT) + "/" + REMOTE_OBJECT);
         this.bank = Bank;
+        //setResizable(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -21,6 +36,8 @@ public class Client_page extends javax.swing.JFrame {
     private void initComponents() {
 
         jTabbedPane2 = new javax.swing.JTabbedPane();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         accountNumber = new javax.swing.JTextField();
         amount = new javax.swing.JTextField();
@@ -50,17 +67,55 @@ public class Client_page extends javax.swing.JFrame {
         checkBalance = new javax.swing.JButton();
         checkMessage = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
-        jLabel8 = new javax.swing.JLabel();
+        account_number_label = new javax.swing.JLabel();
         del_accountNumber = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
+        Delete_Account_btn = new javax.swing.JButton();
         del_message = new javax.swing.JLabel();
+        jPanel7 = new javax.swing.JPanel();
+        jPanel8 = new javax.swing.JPanel();
+        accountNumm = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        oldp = new javax.swing.JPasswordField();
+        newp = new javax.swing.JPasswordField();
+        jLabel12 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        changePin1 = new javax.swing.JButton();
+        pin_info = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTabbedPane2.setBackground(new java.awt.Color(0, 102, 0));
-        jTabbedPane2.setForeground(new java.awt.Color(51, 153, 0));
+        jTabbedPane2.setForeground(new java.awt.Color(255, 255, 255));
         jTabbedPane2.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+
+        jPanel6.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 102), 2, true));
+
+        jLabel8.setBackground(new java.awt.Color(204, 51, 255));
+        jLabel8.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(0, 102, 255));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Welcome to Our RMI Banking System");
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(61, 61, 61)
+                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE))
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(259, Short.MAX_VALUE))
+        );
+
+        jTabbedPane2.addTab("Home", jPanel6);
+
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 204), 2, true));
 
         accountNumber.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         accountNumber.setForeground(new java.awt.Color(0, 102, 0));
@@ -112,7 +167,7 @@ public class Client_page extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(72, 72, 72)
                 .addComponent(message, javax.swing.GroupLayout.PREFERRED_SIZE, 451, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(96, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -128,11 +183,13 @@ public class Client_page extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(deposit, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(message, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                .addComponent(message, javax.swing.GroupLayout.DEFAULT_SIZE, 103, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jTabbedPane2.addTab("Deposit", jPanel1);
+
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 204), 2, true));
 
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 153, 0));
@@ -140,7 +197,7 @@ public class Client_page extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(0, 153, 0));
-        jLabel2.setText("Accout Number");
+        jLabel2.setText("Amount");
 
         withAmnt.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
 
@@ -176,7 +233,7 @@ public class Client_page extends javax.swing.JFrame {
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(withAmnt, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(withAcc, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addContainerGap(153, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -196,10 +253,12 @@ public class Client_page extends javax.swing.JFrame {
                 .addComponent(withdraw, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(29, 29, 29)
                 .addComponent(withmessage, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Withdraw", jPanel2);
+
+        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 204), 2, true));
 
         jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 153, 0));
@@ -222,6 +281,9 @@ public class Client_page extends javax.swing.JFrame {
                 transferActionPerformed(evt);
             }
         });
+
+        transfer_message.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        transfer_message.setForeground(new java.awt.Color(0, 153, 0));
 
         jLabel7.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 153, 0));
@@ -254,7 +316,7 @@ public class Client_page extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addGap(33, 33, 33)
                         .addComponent(transfer_message, javax.swing.GroupLayout.PREFERRED_SIZE, 475, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addContainerGap(111, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -275,18 +337,22 @@ public class Client_page extends javax.swing.JFrame {
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(transfer_amount)
                         .addGap(6, 6, 6)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(transfer, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(transfer_message, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25))
         );
 
         jTabbedPane2.addTab("Transfer", jPanel4);
 
+        jPanel3.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 204), 2, true));
+
         jLabel4.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(0, 153, 0));
         jLabel4.setText("Account Number");
+
+        checkAccount.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        checkAccount.setForeground(new java.awt.Color(0, 153, 51));
 
         checkBalance.setBackground(new java.awt.Color(0, 102, 0));
         checkBalance.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
@@ -299,25 +365,29 @@ public class Client_page extends javax.swing.JFrame {
         });
 
         checkMessage.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        checkMessage.setForeground(new java.awt.Color(51, 153, 0));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(checkBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                        .addGap(54, 54, 54)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(checkMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(checkBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
+                                .addGap(54, 54, 54)
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(checkAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(104, Short.MAX_VALUE))
+                                .addComponent(checkAccount, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 171, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(checkMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -330,26 +400,32 @@ public class Client_page extends javax.swing.JFrame {
                 .addComponent(checkBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(checkMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         jTabbedPane2.addTab("Check Balance", jPanel3);
 
-        jLabel8.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(0, 102, 0));
-        jLabel8.setText("Account Number");
+        jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 204), 2, true));
 
-        jButton1.setBackground(new java.awt.Color(0, 102, 0));
-        jButton1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Delete Account");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        account_number_label.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        account_number_label.setForeground(new java.awt.Color(0, 102, 0));
+        account_number_label.setText("Account Number");
+
+        del_accountNumber.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        del_accountNumber.setForeground(new java.awt.Color(0, 153, 0));
+
+        Delete_Account_btn.setBackground(new java.awt.Color(0, 102, 0));
+        Delete_Account_btn.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        Delete_Account_btn.setForeground(new java.awt.Color(255, 255, 255));
+        Delete_Account_btn.setText("Delete Account");
+        Delete_Account_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                Delete_Account_btnActionPerformed(evt);
             }
         });
 
         del_message.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        del_message.setForeground(new java.awt.Color(0, 153, 0));
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -360,32 +436,143 @@ public class Client_page extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton1)
+                            .addComponent(Delete_Account_btn)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(account_number_label, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(del_accountNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(16, 16, 16)
                         .addComponent(del_message, javax.swing.GroupLayout.PREFERRED_SIZE, 476, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(127, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(account_number_label, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(del_accountNumber, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(Delete_Account_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(del_message, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43))
         );
 
         jTabbedPane2.addTab("Delete Account", jPanel5);
 
+        jPanel7.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 0, 204), 2, true));
+
+        jPanel8.setForeground(new java.awt.Color(0, 153, 0));
+        jPanel8.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+
+        accountNumm.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        accountNumm.setForeground(new java.awt.Color(0, 153, 0));
+
+        jLabel11.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 153, 51));
+        jLabel11.setText("Accout NUmber");
+
+        oldp.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        oldp.setForeground(new java.awt.Color(0, 153, 0));
+
+        newp.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        newp.setForeground(new java.awt.Color(0, 153, 0));
+
+        jLabel12.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(0, 153, 51));
+        jLabel12.setText("Old Pin");
+
+        jLabel13.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 153, 51));
+        jLabel13.setText("New Pin");
+
+        changePin1.setBackground(new java.awt.Color(0, 102, 0));
+        changePin1.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        changePin1.setForeground(new java.awt.Color(255, 255, 255));
+        changePin1.setText("Change");
+        changePin1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changePin1ActionPerformed(evt);
+            }
+        });
+
+        pin_info.setFont(new java.awt.Font("Ubuntu", 1, 14)); // NOI18N
+        pin_info.setForeground(new java.awt.Color(0, 153, 51));
+
+        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
+        jPanel8.setLayout(jPanel8Layout);
+        jPanel8Layout.setHorizontalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(63, 63, 63)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(changePin1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel8Layout.createSequentialGroup()
+                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(jLabel11)
+                                .addComponent(jLabel12)
+                                .addComponent(jLabel13))
+                            .addGap(34, 34, 34)
+                            .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(oldp, javax.swing.GroupLayout.DEFAULT_SIZE, 213, Short.MAX_VALUE)
+                                .addComponent(accountNumm)
+                                .addComponent(newp))))
+                    .addComponent(pin_info, javax.swing.GroupLayout.PREFERRED_SIZE, 446, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
+        jPanel8Layout.setVerticalGroup(
+            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel8Layout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(accountNumm, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(oldp, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel12))
+                .addGroup(jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLabel13))
+                    .addGroup(jPanel8Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(newp, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(changePin1, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pin_info, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 619, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(0, 22, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 22, Short.MAX_VALUE)))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 316, Short.MAX_VALUE)
+            .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel7Layout.createSequentialGroup()
+                    .addGap(0, 0, Short.MAX_VALUE)
+                    .addComponent(jPanel8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE)))
+        );
+
+        jTabbedPane2.addTab("Change Pin", jPanel7);
+
+        jLabel3.setBackground(new java.awt.Color(204, 51, 255));
         jLabel3.setFont(new java.awt.Font("Ubuntu", 1, 36)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(0, 102, 0));
         jLabel3.setText("RMI Baking Main Page");
@@ -395,14 +582,13 @@ public class Client_page extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(113, 113, 113)
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 546, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(113, 113, 113)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -410,67 +596,74 @@ public class Client_page extends javax.swing.JFrame {
                 .addGap(14, 14, 14)
                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 326, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30))
+                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void depositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositActionPerformed
+    private void changePin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changePin1ActionPerformed
         try {
-              bank.deposit(accountNumber.getText(), Double.parseDouble(amount.getText()));
-              message.setText("your deposited "+amount.getText()+" Birr successfully.");
-              accountNumber.setText("");
-              amount.setText("");
-              
-        } catch (NumberFormatException | RemoteException e) {
+            if (bank.changePin(hashPassword(new String(newp.getPassword())), hashPassword(new String(oldp.getPassword())), accountNumm.getText())) {
+                pin_info.setText("Your pin has been changed");
+            }
+        } catch (RemoteException | NoSuchAlgorithmException e) {
             System.out.println(e);
         }
-    }//GEN-LAST:event_depositActionPerformed
+    }//GEN-LAST:event_changePin1ActionPerformed
 
-    private void withdrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withdrawActionPerformed
+    private void Delete_Account_btnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Delete_Account_btnActionPerformed
         try {
-            bank.withdraw(withAcc.getText(), Double.parseDouble(withAmnt.getText()));
-            withmessage.setText("you withdrawn "+withAmnt.getText()+" Birr successfully.");
-        } catch (NumberFormatException | RemoteException e) {
-            System.out.println(e);
+            bank.deleteAccount(del_accountNumber.getText());
+            del_message.setText(del_accountNumber.getText() + " is deleted!");
+        } catch (Exception e) {
         }
-        
-    }//GEN-LAST:event_withdrawActionPerformed
+    }//GEN-LAST:event_Delete_Account_btnActionPerformed
 
     private void checkBalanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkBalanceActionPerformed
         try {
             double balance = bank.checkBalance(checkAccount.getText());
-            checkMessage.setText("You have "+balance+" ETB in your account.");
+            checkMessage.setText("You have " + balance + " ETB in your account.");
         } catch (RemoteException e) {
             System.out.println(e);
         }
-
     }//GEN-LAST:event_checkBalanceActionPerformed
 
     private void transferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transferActionPerformed
         try {
             bank.transfer(transfer_from.getText(), transfer_to.getText(), Double.parseDouble(transfer_amount.getText()));
-            transfer_message.setText("You transfered "+transfer_amount.getText()+" Birr to "+transfer_to.getText());
+            transfer_message.setText("You transfered " + transfer_amount.getText() + " Birr to " + transfer_to.getText());
         } catch (NumberFormatException | RemoteException e) {
             System.out.println(e);
         }
-
     }//GEN-LAST:event_transferActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void withdrawActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_withdrawActionPerformed
         try {
-            bank.deleteAccount(del_accountNumber.getText());
-            del_message.setText(del_accountNumber.getText()+ " is deleted!");
-        } catch (Exception e) {
+            bank.withdraw(withAcc.getText(), Double.parseDouble(withAmnt.getText()));
+            withmessage.setText("you withdrawn " + withAmnt.getText() + " Birr successfully.");
+        } catch (NumberFormatException | RemoteException e) {
+            System.out.println(e);
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_withdrawActionPerformed
+
+    private void depositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_depositActionPerformed
+        try {
+            bank.deposit(accountNumber.getText(), Double.parseDouble(amount.getText()));
+            message.setText("your deposited " + amount.getText() + " Birr successfully.");
+            accountNumber.setText("");
+            amount.setText("");
+
+        } catch (NumberFormatException | RemoteException e) {
+            System.out.println(e);
+        }
+    }//GEN-LAST:event_depositActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) throws Exception{
+    public static void main(String args[]) throws Exception {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -501,25 +694,31 @@ public class Client_page extends javax.swing.JFrame {
                 try {
                     new Client_page().setVisible(true);
                 } catch (Exception ex) {
-                       System.out.println(ex); 
+                    System.out.println(ex);
                 }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Delete_Account_btn;
     private javax.swing.JLabel accnum;
     private javax.swing.JTextField accountNumber;
+    private javax.swing.JTextField accountNumm;
+    private javax.swing.JLabel account_number_label;
     private javax.swing.JLabel amnt;
     private javax.swing.JTextField amount;
+    private javax.swing.JButton changePin1;
     private javax.swing.JTextField checkAccount;
     private javax.swing.JButton checkBalance;
     private javax.swing.JLabel checkMessage;
     private javax.swing.JTextField del_accountNumber;
     private javax.swing.JLabel del_message;
     private javax.swing.JButton deposit;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -532,8 +731,14 @@ public class Client_page extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel message;
+    private javax.swing.JPasswordField newp;
+    private javax.swing.JPasswordField oldp;
+    private javax.swing.JLabel pin_info;
     private javax.swing.JButton transfer;
     private javax.swing.JTextField transfer_amount;
     private javax.swing.JTextField transfer_from;

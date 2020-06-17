@@ -1,19 +1,15 @@
 package Bank;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.math.BigInteger;
 import java.rmi.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  *
  * @author mc
  */
 public class Login extends javax.swing.JFrame {
-
-    private Connection conn;
-    private PreparedStatement pst;
-    private ResultSet rs;
 
     private static final String HOST_NAME = "localhost";
     private static final int PORT = 1099;
@@ -22,9 +18,20 @@ public class Login extends javax.swing.JFrame {
 
     public Login() throws Exception {
         initComponents();
-        
+
         BankInterface Bank = (BankInterface) Naming.lookup("rmi://" + HOST_NAME + ":" + Integer.toString(PORT) + "/" + REMOTE_OBJECT);
         this.bank = Bank;
+    }
+
+    public String hashPassword(String password) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.reset();
+        md.update(password.getBytes());
+        byte[] digest = md.digest();
+        BigInteger bigInt = new BigInteger(1, digest);
+        String hastext = bigInt.toString(16);
+        System.out.println("hash of " + password + " = " + hastext);
+        return hastext;
     }
 
     @SuppressWarnings("unchecked")
@@ -157,13 +164,13 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginActionPerformed
+
         try {
-            if (bank.login(username.getText(), new String(password.getPassword()))) {
-                Client_page mp =  new Client_page();
+            if (bank.login(username.getText(), hashPassword(new String(password.getPassword())))) {
+                Client_page mp = new Client_page();
                 this.dispose();
-                mp.setVisible(true);  
-            }
-            else{
+                mp.setVisible(true);
+            } else {
                 message.setText("Login Failed. Try again.");
             }
         } catch (RemoteException ex) {
@@ -174,9 +181,9 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_loginActionPerformed
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
-            Register reg = new Register();
-            reg.setVisible(true);
-            this.dispose();
+        Register reg = new Register();
+        reg.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_registerActionPerformed
 
     /**

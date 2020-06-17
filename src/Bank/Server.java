@@ -9,11 +9,11 @@ public class Server {
     private static Registry registry;
     private static String registry_port = "1099";
     private static String remote_ob_name;
-
+    
     public Server() throws Exception {
         this("Bank");
         BankImpl bank = new BankImpl();
-
+        
         Naming.rebind("rmi://" + HOSTNAME + ":" + registry_port + "/" + remote_ob_name, bank);
         System.out.println("RMI server is running.");
 

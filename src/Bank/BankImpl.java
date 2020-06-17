@@ -1,7 +1,10 @@
 package Bank;
 
+import java.math.BigInteger;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,8 +16,9 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
     private Connection conn;
     private PreparedStatement pst;
     private ResultSet rs;
-    private double balance;
+    //the above variables are for mysql connectivity.
 
+    private double balance;
     private String username;
     private String password;
 
@@ -29,12 +33,15 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
         }
     }
 
+   
+
+    //implemenation for the login abstract method in the BankInterface interface.
     @Override
     public boolean login(String username, String password) throws RemoteException {
         String query = "select * from users where username=? and password=?";
-        this.password = password;
-        this.username = username;
         try {
+            this.password = password;
+            this.username = username;
             pst = conn.prepareStatement(query);
             pst.setString(1, username);
             pst.setString(2, password);
@@ -49,10 +56,12 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
                 }
             }
         } catch (SQLException e) {
+            System.out.println(e);
         }
         return false;
     }
 
+    //implementation for checkBalance method in the BankInterface.
     @Override
     public double checkBalance(String accNumber) throws RemoteException {
         try {
@@ -64,6 +73,7 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
 
                 if (rs.next()) {
                     balance = rs.getDouble("balance");
+                    System.out.println("balance: "+balance);
                 }
             }
         } catch (RemoteException | SQLException e) {
@@ -72,6 +82,7 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
         return balance;
     }
 
+    //implementation for the withdraw method in the interface.
     @Override
     public void withdraw(String accNumber, double amount) throws RemoteException {
         try {
@@ -89,13 +100,14 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
         }
     }
 
+    //implemenation for the deposit method in the interface.
     @Override
     public void deposit(String accNumber, double amount) throws RemoteException {
         try {
             if (login(username, password)) {
                 balance = checkBalance(accNumber);
                 balance += amount;
-                String sql = "update users set balance = ? where accNumber = ?";
+                String sql = "update users set Balance = ? where accNumber = ?";
                 pst = conn.prepareStatement(sql);
                 pst.setString(1, Double.toString(balance));
                 pst.setString(2, accNumber);
@@ -108,14 +120,14 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
 
     }
 
-  
-
+//implemenation for the transfer method in the interface.
     @Override
     public void transfer(String from, String to, double amount) throws RemoteException {
         withdraw(from, amount);
         deposit(to, amount);
     }
 
+    //implementation for the register method in the interface.
     @Override
     public boolean register(String fname, String lname, String uname, String pass, String accNumber, double balance) throws RemoteException {
         try {
@@ -136,6 +148,7 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
         return false;
     }
 
+    //implemenation for the deleteAccount method in the interface.
     @Override
     public void deleteAccount(String accountNumber) throws RemoteException {
         try {
@@ -143,9 +156,30 @@ public class BankImpl extends UnicastRemoteObject implements BankInterface {
             pst = conn.prepareStatement(qury);
             pst.setString(1, accountNumber);
             pst.execute();
-            
-        } catch (Exception e) {
+
+        } catch (SQLException e) {
+            System.out.println(e);
         }
+    }
+
+    @Override
+    public boolean changePin(String newPin, String oldPin, String account) throws RemoteException {
+        try {
+            String query = "update users set password = ? where accNumber = ?";
+            pst = conn.prepareStatement(query);
+            pst.setString(1, newPin);
+            pst.setString(2, account);
+            System.out.println(newPin + "\n" + oldPin + "\n" + account);
+            if (login(username, oldPin)) {
+                if (pst.execute()) {
+                    return true;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+        return false;
     }
 
 }

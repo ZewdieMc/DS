@@ -1,22 +1,21 @@
 package Bank;
 
+import java.math.BigInteger;
 import java.net.MalformedURLException;
+import java.nio.charset.StandardCharsets;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Register extends javax.swing.JFrame {
 
-    Connection conn;
-    PreparedStatement pst;
-    ResultSet rs;
     private Set<String> accNumbers;
     String accNumber;
 
@@ -25,26 +24,38 @@ public class Register extends javax.swing.JFrame {
     private static final String REMOTE_OBJECT = "Bank";
     private BankInterface bank;
 
+    public String hashPassword(String password)throws NoSuchAlgorithmException{
+   
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        md.reset();
+        md.update(password.getBytes());
+        byte[] digest  = md.digest();
+        BigInteger bigInt = new BigInteger(1,digest);
+        String hastext = bigInt.toString(16);
+        return hastext;
+          
+    }
     public Register() {
         initComponents();
         setTitle("Register");
         accNumbers = new HashSet<>();
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost/Bankrmi", "root", "youaremine123**");
-
+            
             while (true) {
+                // a random account number is generated for each registering client.
                 accNumber = Integer.toString(new java.util.Random().nextInt(99999999));
+                
                 if (!accNumbers.contains(accNumber)) {
                     break;
                 }
             }
             accountNumber.setText(accNumber);
+            accNumbers.add(accNumber);
 
             BankInterface Bank = (BankInterface) Naming.lookup("rmi://" + HOST_NAME + ":" + Integer.toString(PORT) + "/" + REMOTE_OBJECT);
             this.bank = Bank;
 
-        } catch (RemoteException | NotBoundException | MalformedURLException | ClassNotFoundException | SQLException e) {
+        } catch (RemoteException | NotBoundException | MalformedURLException e) {
             System.out.println(e);
         }
 
@@ -259,8 +270,12 @@ public class Register extends javax.swing.JFrame {
 
     private void registerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerActionPerformed
         try {
-            if (bank.register(firstname.getText(), lastname.getText(), username.getText(), new String(password.getPassword()), accountNumber.getText(), Double.parseDouble(balance.getText()))) {
-                message.setText("registered successfully. click login button.");
+            try {
+                if (bank.register(firstname.getText(), lastname.getText(), username.getText(), hashPassword(new String(password.getPassword())), accountNumber.getText(), Double.parseDouble(balance.getText()))) {
+                    message.setText("registered successfully. click login button.");
+                }
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(Register.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (RemoteException e) {
             System.out.println(e);

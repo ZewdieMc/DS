@@ -13,6 +13,7 @@ public interface BankInterface extends java.rmi.Remote {
     public void deposit(String accNumber, double amount) throws java.rmi.RemoteException;
 
     public void deleteAccount(String accountNumber) throws java.rmi.RemoteException;
+    public boolean changePin(String newPin, String oldPin,String account) throws java.rmi.RemoteException;
 
     public void transfer(String from, String to, double amount) throws java.rmi.RemoteException;
 
